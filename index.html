@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f5fb">
+    <meta name="description" content="Divine turns screenshots into editable HTML and CSS layouts, right in your browser.">
+    <title>Divine — screenshot to layout</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Divine home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span>divine<span class="brand-period">.</span></span>
+      </a>
+      <div class="topbar-note"><span class="privacy-dot"></span> Runs privately in your browser</div>
+      <span class="github-link">Static · works offline</span>
+    </header>
+
+    <main class="app-shell">
+      <section class="intro">
+        <div class="eyebrow"><span class="eyebrow-line"></span> DIVINE · IMAGE TO INTERFACE</div>
+        <h1>A starting point<br>for your <span>next layout.</span></h1>
+        <p>Drop in a screenshot. Get an editable, geometry-based HTML layout — no upload, no AI, no fuss.</p>
+      </section>
+
+      <div class="workspace">
+        <section class="work-panel source-panel" aria-labelledby="source-heading">
+          <div class="panel-heading">
+            <div>
+              <span class="step-label">01 / SOURCE</span>
+              <h2 id="source-heading">Your image</h2>
+            </div>
+            <button class="text-button" id="sample-button" type="button">Try a sample <span aria-hidden="true">↗</span></button>
+          </div>
+
+          <label class="dropzone" id="dropzone" for="image-input">
+            <input id="image-input" type="file" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp">
+            <span class="upload-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14.5v3A2.5 2.5 0 0 0 7.5 20h9a2.5 2.5 0 0 0 2.5-2.5v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="drop-title">Drop your screenshot here</span>
+            <span class="drop-subtitle">or <span>browse files</span> · PNG, JPG, WebP</span>
+            <span class="drop-limit">Up to 25 MB</span>
+          </label>
+
+          <div class="image-stage" id="image-stage" hidden>
+            <div class="stage-topline">
+              <span id="image-name" class="image-name"></span>
+              <button id="remove-image" class="icon-button" type="button" aria-label="Remove image">×</button>
+            </div>
+            <div class="image-frame">
+              <img id="original-image" alt="Uploaded screenshot">
+            </div>
+            <div class="image-meta"><span id="image-dimensions"></span><span class="local-badge">LOCAL FILE</span></div>
+          </div>
+
+          <div class="source-actions">
+            <p class="privacy-note"><span aria-hidden="true">⌑</span> Your image never leaves this device.</p>
+            <button id="analyze-button" class="button button-primary" type="button" disabled>
+              <span>Analyze layout</span><span aria-hidden="true">↗</span>
+            </button>
+          </div>
+
+          <div id="status-message" class="status-message" role="status" aria-live="polite" hidden></div>
+
+          <div class="analysis-summary" id="analysis-summary" hidden>
+            <div class="summary-title"><span class="step-label">02 / ANALYSIS</span><span id="analysis-time"></span></div>
+            <p id="analysis-description"></p>
+            <div class="summary-stats">
+              <div><strong id="region-count">0</strong><span>regions</span></div>
+              <div><strong id="layout-count">0</strong><span>alignment bands</span></div>
+              <div><strong id="color-count">0</strong><span>colors</span></div>
+            </div>
+            <div class="region-list-heading">DETECTED REGIONS <span>POSITION · SIZE</span></div>
+            <ol id="region-list" class="region-list"></ol>
+          </div>
+        </section>
+
+        <section class="work-panel result-panel" aria-labelledby="result-heading">
+          <div class="panel-heading result-heading">
+            <div>
+              <span class="step-label">03 / OUTPUT</span>
+              <h2 id="result-heading">Your layout</h2>
+            </div>
+            <div class="export-actions">
+              <button id="download-html" class="button button-secondary" type="button" disabled>Download HTML</button>
+              <button id="download-project" class="button button-primary" type="button" disabled><span>Download project</span><span aria-hidden="true">↓</span></button>
+            </div>
+          </div>
+
+          <div class="result-tabs" role="tablist" aria-label="Layout output">
+            <button class="tab-button is-active" id="preview-tab" type="button" role="tab" aria-selected="true" aria-controls="preview-view">Preview</button>
+            <button class="tab-button" id="html-tab" type="button" role="tab" aria-selected="false" aria-controls="code-view">HTML</button>
+            <button class="tab-button" id="css-tab" type="button" role="tab" aria-selected="false" aria-controls="code-view">CSS</button>
+            <span class="tab-hint" id="tab-hint">Select an element · move · resize</span>
+          </div>
+
+          <div class="preview-view" id="preview-view" role="tabpanel" aria-labelledby="preview-tab">
+            <div class="preview-toolbar"><span class="preview-dots"><i></i><i></i><i></i></span><span>LIVE PREVIEW</span><span class="viewport-label">RESPONSIVE</span></div>
+            <div class="preview-frame">
+              <div class="preview-empty" id="preview-empty">
+                <span class="empty-art" aria-hidden="true"><i></i><i></i><i></i></span>
+                <strong>Your layout will appear here</strong>
+                <span>Upload an image and analyze it to get started.</span>
+              </div>
+              <iframe id="preview-frame" title="Generated layout preview" sandbox="allow-scripts"></iframe>
+            </div>
+          </div>
+
+          <div class="code-view" id="code-view" role="tabpanel" aria-labelledby="html-tab" hidden>
+            <div class="code-toolbar"><span id="code-filename">index.html</span><button class="text-button" id="copy-code" type="button">Copy code</button></div>
+            <textarea id="code-editor" aria-label="Editable generated HTML" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+          </div>
+          <div class="result-footer"><span><span class="footer-live-dot"></span> <span id="result-status">Waiting for an image</span></span><span>HTML + CSS · no dependencies</span></div>
+        </section>
+      </div>
+
+      <footer class="page-footer"><span>Built for a good first draft.</span><span>Pixels in, possibilities out.</span></footer>
+    </main>
+  </body>
+</html>
