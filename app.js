@@ -581,10 +581,10 @@ function mergeTextRegions(regions, imageWidth) {
     changed = false;
     outer: for (let first = 0; first < items.length; first += 1) {
       const a = items[first];
-      if (!isTextLike(a)) continue;
+      if (!isTextLike(a) || a.density >= 0.58) continue;
       for (let second = first + 1; second < items.length; second += 1) {
         const b = items[second];
-        if (!isTextLike(b)) continue;
+        if (!isTextLike(b) || b.density >= 0.58) continue;
         const overlap = Math.max(0, Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y));
         const overlapRatio = overlap / Math.max(1, Math.min(a.height, b.height));
         const horizontalGap = Math.max(0, Math.max(a.x, b.x) - Math.min(a.x + a.width, b.x + b.width));
@@ -634,7 +634,7 @@ function classifyRegion(region, imageWidth, imageHeight) {
   if (aspect > 7 && region.width > imageWidth * 0.5
     && region.height >= imageHeight * 0.035 && region.height < imageHeight * 0.06) return "input";
   if (isTextLike(region) && (region.density < 0.58 || (aspect > 2.3 && region.height < imageHeight * 0.045))) return "text";
-  if (relativeArea > 0.018 && region.density > 0.18) return aspect > 1.45 ? "surface" : "media";
+  if (relativeArea > 0.012 && region.density > 0.18) return aspect > 1.45 ? "surface" : "media";
   if (aspect > 3.2 && region.height < imageHeight * 0.09) return "accent";
   return aspect < 0.82 ? "media" : "accent";
 }
